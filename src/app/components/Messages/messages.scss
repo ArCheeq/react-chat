@@ -1,0 +1,10 @@
+@import '../../styles/variables.scss';
+
+.messages {
+    background-color: $light-text-color;
+    padding: 10px;
+
+    height: calc(100% - 100px);
+
+    overflow: auto;
+}

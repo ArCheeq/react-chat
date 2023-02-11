@@ -1,0 +1,41 @@
+@import '../../styles/variables.scss';
+
+.input {
+    height: 50px;
+    background-color: $light-color;
+    padding: 10px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    input {
+        width: 100%;
+        border: none;
+        outline: none;
+        color: $background-navbar-color;
+        font-size: 18px;
+
+        &::placeholder {
+            color: lightgray;
+        }
+    }
+
+    .send {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        img {
+            height: 24px;
+            cursor: pointer;
+        }
+
+        button {
+            border: none;
+            padding: 10px 15px;
+            color: $light-color;
+            background-color: $background-color;
+        }
+    }
+}

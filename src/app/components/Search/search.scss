@@ -1,0 +1,19 @@
+@import '../../styles/variables.scss';
+
+.search {
+    border-bottom: 1px solid gray;
+
+    .searchForm {
+        padding: 10px;
+        input {
+            background-color: transparent;
+            outline: none;
+            border: none;
+            color: $light-color;
+
+            &::placeholder {
+                color: lightgray;
+            }
+        }
+    }
+}
