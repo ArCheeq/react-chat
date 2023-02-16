@@ -25,6 +25,7 @@ body {
     align-items: center;
     
     .formWrapper {
+        max-width: 380px;
         background-color: $light-color;
         padding: 20px 60px;
         border-radius: 10px;
@@ -90,6 +91,16 @@ body {
                 font-weight: 700;
                 cursor: pointer;
             }
+
+            .error {
+                text-align: center;
+                color: #E52B50;
+                font-weight: 500;
+            }
+        }
+        
+        a {
+            color: inherit;
         }
     }
 }
