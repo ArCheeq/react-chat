@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
+import useAuth from '../../hooks/useAuth';
+
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../store/slices/userSlice';
 
@@ -16,20 +18,27 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const {loginUser} = useAuth();
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const auth = getAuth();
-    signInWithEmailAndPassword(auth, email, password)
-      .then(({user}) => {
-        dispatch(setUser({
-          email: user.email,
-          token: user.accessToken,
-          id: user.uid
-        }));
-        navigate("/home");
-      })
-      .catch(() => setError(true))
+    loginUser(email, password, setError).then(() => {
+      console.log(error);
+      navigate("/home")
+    })
+
+    // const auth = getAuth();
+    // signInWithEmailAndPassword(auth, email, password)
+    //   .then(({user}) => {
+    //     dispatch(setUser({
+    //       email: user.email,
+    //       token: user.accessToken,
+    //       id: user.uid
+    //     }));
+    //     navigate("/home");
+    //   })
+    //   .catch(() => setError(true))
   }
 
   return (

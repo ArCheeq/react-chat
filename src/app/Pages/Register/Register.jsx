@@ -1,37 +1,36 @@
 import React, { useState } from 'react'
-
 import img from '../../resources/images/addAvatar.png';
-
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-
-import { useDispatch } from 'react-redux';
-import { setUser } from '../../store/slices/userSlice';
-
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import useAuth from '../../hooks/useAuth';
 
 const Register = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(false);
+  const [displayName, setDisplayName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [file, setFile] = useState('');
 
-  const dispatch = useDispatch();
+  const [error, setError] = useState(false);
+  const [fileError, setFileError] = useState(false);
+
+  const {uploadUser, updateUserProfile} = useAuth();
+
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const auth = getAuth();
-    createUserWithEmailAndPassword(auth, email, password)
-    .then(({user}) => {
-      dispatch(setUser({
-        email: user.email,
-        token: user.accessToken,
-        id: user.uid
-      }));
-      navigate("/home");
-    })
-    .catch(() => setError(true));
+    uploadUser(email, password, setError)
+      .then(() => {
+        if (!!file & !error) {
+          return updateUserProfile(file, displayName, setFileError);
+        }
+      })
+      .then(() => {
+        if (!error && !fileError) {
+          e.target.reset();
+          navigate("/home") 
+        } 
+      });
   }
 
   return (
@@ -40,14 +39,31 @@ const Register = () => {
             <h1 className='logo'>React Chat</h1>
             <p className='title'>Register</p>
             <form onSubmit={handleSubmit}>
-                <input type="text" placeholder='Display name'/>
-                <input type="email" placeholder='Email' onChange={(e) => setEmail(e.target.value)}/>
-                <input type="password" placeholder='Password' onChange={(e) => setPassword(e.target.value)}/>
-                <input style={{display: 'none'}} type="file" id='file'/>
+                <input 
+                  type="text" 
+                  placeholder='Display name'
+                  value={displayName} 
+                  onChange={(e) => setDisplayName(e.target.value)}/>
+                <input 
+                  type="email" 
+                  placeholder='Email'
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}/>
+                <input 
+                  type="password" 
+                  placeholder='Password'
+                  value={password} 
+                  onChange={(e) => setPassword(e.target.value)}/>
+                <input 
+                  style={{display: 'none'}} 
+                  type="file" 
+                  id='file'
+                  onChange={(e) => setFile(e.target.files[0])}/>
                 <label htmlFor="file">
                     <img src={img} alt="addAvatar" />
                     <span>Add an avatar</span>
                 </label>
+                {fileError ? <p className='error'>Failed to load image</p> : null}
                 {error ? <p className='error'>Email already in use, sign in</p> : null}
                 <button>Sign up</button>
             </form>
