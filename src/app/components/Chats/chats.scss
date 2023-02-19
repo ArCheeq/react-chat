@@ -8,6 +8,8 @@
         gap: 10px;
         color: $light-color;
         cursor: pointer;
+
+        transition: background-color .3s ease-in-out;
         
         &:hover {
             background-color: $background-navbar-color;

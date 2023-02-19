@@ -12,7 +12,14 @@ const Chat = () => {
   return (
     <div className='chat'>
       <div className="chatInfo">
-        <span>Jane</span>
+        <span>
+          Jane
+          <div className='online'>
+            <svg width="12" height="12">
+              <circle cx="6" cy="6" r="5" fill="#4CAF50" />
+            </svg>
+          </div>
+        </span>
         <div className="chatIcons">
           <img src={Cam} alt="Camera" />
           <img src={Add} alt="add" />

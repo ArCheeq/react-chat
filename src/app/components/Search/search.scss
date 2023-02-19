@@ -1,19 +1,41 @@
 @import '../../styles/variables.scss';
 
 .search {
-    border-bottom: 1px solid gray;
-
     .searchForm {
         padding: 10px;
-        input {
-            background-color: transparent;
-            outline: none;
-            border: none;
-            color: $light-color;
+        border-bottom: 1px solid gray;
 
-            &::placeholder {
-                color: lightgray;
+        label {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            border: 2px solid darken($color: #ddddf7, $amount: 10);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            padding-left: 10px;
+
+            .magnifier {
+                margin-top: 3px;
             }
+            input {
+                font-size: 16px;
+                background-color: transparent;
+                outline: none;
+                border: none;
+                color: $light-color;
+    
+                width: 100%;
+                padding: 10px;
+    
+                &::placeholder {
+                    color: lightgray;
+                }
+            }
+        }
+
+        .noUsers {
+            color: #ddddf7;
+            font-size: 14px;
         }
     }
 }

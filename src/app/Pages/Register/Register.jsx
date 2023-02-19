@@ -9,28 +9,36 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [file, setFile] = useState('');
 
-  const [error, setError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
   const [fileError, setFileError] = useState(false);
 
-  const {uploadUser, updateUserProfile} = useAuth();
+  const {uploadUser, 
+        updateUserProfile, 
+        addUserToDatabase, 
+        removeUserProfile} = useAuth();
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    uploadUser(email, password, setError)
-      .then(() => {
-        if (!!file & !error) {
-          return updateUserProfile(file, displayName, setFileError);
-        }
-      })
-      .then(() => {
-        if (!error && !fileError) {
-          e.target.reset();
-          navigate("/home") 
-        } 
-      });
+    try {
+      // Creating user
+      const user = await uploadUser(email, password);
+      // Updating user profile (image and display name)
+      const downloadURL = await updateUserProfile(file, displayName, user);
+      // Adding user to database
+      await addUserToDatabase(user, downloadURL, displayName);
+
+      navigate("/home"); 
+    } catch (error) {
+      if (error.message === "auth/email-already-in-use") {
+        setEmailError(true);
+      } else {
+        setFileError(true);
+      }
+      removeUserProfile();
+    }
   }
 
   return (
@@ -64,7 +72,7 @@ const Register = () => {
                     <span>Add an avatar</span>
                 </label>
                 {fileError ? <p className='error'>Failed to load image</p> : null}
-                {error ? <p className='error'>Email already in use, sign in</p> : null}
+                {emailError ? <p className='error'>Email already in use, sign in</p> : null}
                 <button>Sign up</button>
             </form>
             <p>You do have an account? <Link to="/sign-in">Login</Link></p>

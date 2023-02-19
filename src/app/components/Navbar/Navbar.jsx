@@ -1,12 +1,14 @@
 import React from 'react'
 import './navbar.scss';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { removeUser } from '../../store/slices/userSlice';
 
 import { signOut, getAuth } from 'firebase/auth';
 
 const Navbar = () => {
+  const displayName = useSelector(state => state.user.displayName);
+  const photoURL = useSelector(state => state.user.photoURL);
 
   const dispatch = useDispatch();
 
@@ -21,8 +23,8 @@ const Navbar = () => {
     <div className='navbar'>
       <span className="logo">React Chat</span>
       <div className="user">
-        <img src="https://images.pexels.com/photos/10352348/pexels-photo-10352348.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load" alt="avatar" />
-        <span>John</span>
+        <img src={photoURL} alt="avatar" />
+        <span>{displayName}</span>
         <button onClick={logout}>logout</button>
       </div>
     </div>

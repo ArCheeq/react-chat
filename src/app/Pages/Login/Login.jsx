@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
 
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-
 import useAuth from '../../hooks/useAuth';
 
-import { useDispatch } from 'react-redux';
-import { setUser } from '../../store/slices/userSlice';
-
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -16,29 +10,18 @@ const Login = () => {
   const [error, setError] = useState(false);
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const {loginUser} = useAuth();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    loginUser(email, password, setError).then(() => {
-      console.log(error);
-      navigate("/home")
-    })
-
-    // const auth = getAuth();
-    // signInWithEmailAndPassword(auth, email, password)
-    //   .then(({user}) => {
-    //     dispatch(setUser({
-    //       email: user.email,
-    //       token: user.accessToken,
-    //       id: user.uid
-    //     }));
-    //     navigate("/home");
-    //   })
-    //   .catch(() => setError(true))
+    try {
+      await loginUser(email, password, setError);
+      navigate("/home");
+    } catch (error) {
+      setError(true);
+    }
   }
 
   return (

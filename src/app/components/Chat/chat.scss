@@ -13,7 +13,16 @@
         padding: 10px;
 
         span {
+            color: #ddddf7;
             font-weight: 500;
+
+            display: flex;
+            align-items: center;
+            gap: 6px;
+
+            .online {
+                margin-top: 2px;
+            }
         }
 
         .chatIcons {
