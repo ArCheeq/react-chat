@@ -37,8 +37,6 @@ const useChat = () => {
     const createChat = async (user) => {
       // check whether the group(chats in firestore) exist, if not - create
       const auth = getAuth();
-      console.log(auth.currentUser);
-      console.log(user)
       const combinedId =
         auth.currentUser.uid > user.uid
           ? auth.currentUser.uid + user.uid

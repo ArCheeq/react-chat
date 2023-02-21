@@ -1,16 +1,33 @@
-import React from 'react'
+import React, {useEffect, useRef} from 'react';
+import { useSelector } from 'react-redux';
 import './message.scss';
 
-const Message = () => {
+const Message = ({message}) => {
+  const currentUser = useSelector(state => state.user);
+  const user = useSelector(state => state.userChat.user);
+
+  const ref = useRef();
+
+  useEffect(() => {
+    ref.current.scrollIntoView({behavior: "smooth"});
+  }, [message]);
+
+
   return (
-    <div className='message owner'>
+    <div
+      ref={ref} 
+      className={`message ${message.senderId === currentUser.id && "owner" }`}>
       <div className="messageInfo">
-        <img src="https://images.pexels.com/photos/10352348/pexels-photo-10352348.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load" alt="avatar" />
+        <img 
+          src={message.senderId === currentUser.id ? currentUser.photoURL : user.photoURL} 
+          alt="avatar" />
         <span>Just now</span>
       </div>
       <div className="messageContent">
-        <p>Hello</p>
-        <img src="https://images.pexels.com/photos/10352348/pexels-photo-10352348.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load" alt="avatar" />
+        <p>{message.text}</p>
+        {message.hasOwnProperty("img") 
+        ? <img src={message.img} alt="avatar" />
+        : null}
       </div>
     </div>
   )
