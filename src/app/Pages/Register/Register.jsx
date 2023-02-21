@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import img from '../../resources/images/addAvatar.png';
 import { Link, useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
+import useChat from '../../hooks/useChat';
 
 const Register = () => {
   const [displayName, setDisplayName] = useState('');
@@ -17,6 +18,8 @@ const Register = () => {
         addUserToDatabase, 
         removeUserProfile} = useAuth();
 
+  const {createUserChats} = useChat();
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -29,6 +32,8 @@ const Register = () => {
       const downloadURL = await updateUserProfile(file, displayName, user);
       // Adding user to database
       await addUserToDatabase(user, downloadURL, displayName);
+      // Create user chats in database 
+      await createUserChats(user.uid);
 
       navigate("/home"); 
     } catch (error) {

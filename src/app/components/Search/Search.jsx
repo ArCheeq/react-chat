@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 
 import Chats from '../Chats/Chats';
+import SearchChats from '../searchChats/SearchChats';
 
 import useChat from '../../hooks/useChat';
 
@@ -11,8 +12,7 @@ const Search = () => {
   const [users, setUsers] = useState([]);
   const [error, setError] = useState(false)
 
-
-  const { searchUser } = useChat();
+  const { searchUser, createChat } = useChat();
 
   const handleKey = (e) => {
     if (e.code === "Enter") {
@@ -26,6 +26,14 @@ const Search = () => {
       })
     }
   }
+
+  const handleSelect = async (user) => {
+    await createChat(user);
+    setUsername("");
+    setUsers([]);
+  }
+
+  const cachedHandleSelect = useCallback(handleSelect, []);
 
   return (
     <div className='search'>
@@ -45,10 +53,11 @@ const Search = () => {
             onChange={(e) => setUsername(e.target.value)}
             onKeyDown={handleKey}/>
         </label>
-          {error ? <p className='noUsers'>No users found with this name...</p> : <Chats users={users}/>}
+          {error ? <p className='noUsers'>No users found with this name...</p> : <SearchChats users={users} handleSelect={cachedHandleSelect}/>}
       </div>
+      <Chats />
     </div>
   )
 }
 
-export default Search
+export default Search;

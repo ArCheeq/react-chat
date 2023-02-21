@@ -1,22 +1,43 @@
 import { nanoid } from '@reduxjs/toolkit';
-import React from 'react'
+import { doc, onSnapshot } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { db } from '../../../firebase/firebase';
+
 import './chats.scss';
 
-const Chats = ({users}) => {
+const Chats = () => {
 
-  const renderUsers = (users) => {
-    return users.map((user => (
-      <div className="userChat" key={nanoid()}>
-        <img src={user.photoURL.downloadURL} alt="avatar" />
+  const [chats, setChats] = useState([]);
+
+  const currentUser = useSelector(state => state.user);
+
+  useEffect(() => {
+    const getChats = () => {
+      const unsub = onSnapshot(doc(db, "userChats", currentUser.id), (doc) => {
+        setChats(Object.entries(doc.data()));
+      });
+      return () => {
+        unsub();
+      }
+    }
+
+    currentUser.id && getChats();
+  }, [currentUser.id]);
+
+  const renderUsers = (chats) => {
+    return chats.map((chat => (
+      <div className="userChat" key={chat[0]}>
+        <img src={chat[1].userInfo.photoURL} alt="avatar" />
         <div className="userChatInfo">
-          <span>{user.displayName}</span>
-          <p className="lastMessage">Hello</p>
+          <span>{chat[1].userInfo.displayName}</span>
+          <p className="lastMessage">{chat[1].userInfo.lastMessage}</p>
         </div>
       </div>
     )))
   }
 
-  const elements = renderUsers(users);
+  const elements = renderUsers(chats);
   return (
     <div className='chats'>
       {elements}
@@ -24,4 +45,4 @@ const Chats = ({users}) => {
   )
 }
 
-export default Chats
+export default Chats;
