@@ -32,14 +32,21 @@ const Chats = () => {
     dispatch(changeUser({user, currentUser}));
   }
 
+  const sliceString = (str) => {
+    if (str.length > 30) {
+      return str.slice(0, 26) + "...";
+    } else {
+      return str;
+    }
+  }
+
   const renderUsers = (chats) => {
-    console.log(chats)
     return chats.sort((a, b) => b[1].date - a[1].date).map((chat => (
       <div className="userChat" key={chat[0]} onClick={() => handleSelect(chat[1].userInfo)}>
         <img src={chat[1].userInfo.photoURL} alt="avatar" />
         <div className="userChatInfo">
           <span>{chat[1].userInfo.displayName}</span>
-          <p className="lastMessage">{chat[1].lastMessage ? chat[1].lastMessage.text : null}</p>
+          <p className="lastMessage">{chat[1].lastMessage ? sliceString(chat[1].lastMessage.text) : null}</p>
         </div>
       </div>
     )))

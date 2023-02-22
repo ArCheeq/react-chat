@@ -3,6 +3,7 @@ import './navbar.scss';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { removeUser } from '../../store/slices/userSlice';
+import { closeUserChat } from '../../store/slices/chatSlice';
 
 import { signOut, getAuth } from 'firebase/auth';
 
@@ -14,6 +15,7 @@ const Navbar = () => {
 
   const logout = () => {
     dispatch(removeUser());
+    dispatch(closeUserChat());
 
     const auth = getAuth();
     signOut(auth);

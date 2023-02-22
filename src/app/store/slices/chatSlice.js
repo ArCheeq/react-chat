@@ -15,9 +15,13 @@ const chatSlice = createSlice({
             state.chatId = currentUser.id > user.uid
                 ? currentUser.id + user.uid
                 : user.uid + currentUser.id;
+        },
+        closeUserChat: (state) => {
+            state.user = {};
+            state.chatId = "";
         }
     }
 });
 
-export const { changeUser } = chatSlice.actions;
+export const { changeUser, closeUserChat } = chatSlice.actions;
 export default chatSlice.reducer;

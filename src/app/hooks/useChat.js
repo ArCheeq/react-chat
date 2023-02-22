@@ -8,7 +8,13 @@ import { collection,
          setDoc, 
          doc, 
          updateDoc, 
-         serverTimestamp } from 'firebase/firestore';
+         serverTimestamp,
+         Timestamp,
+        arrayUnion } from 'firebase/firestore';
+
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
+import { nanoid } from "@reduxjs/toolkit";
 
 const useChat = () => {
 
@@ -72,8 +78,52 @@ const useChat = () => {
       }
     }
 
+    const sendMessage = async (img, text, currentUser, data) => {
+      if (img) {
+        const storage = getStorage();
+        const storageRef = ref(storage, nanoid());
+  
+        await uploadBytes(storageRef, img)
+              .then(snapshot => getDownloadURL(snapshot.ref))
+              .then(downloadURL => {
+                updateDoc(doc(db, "chats", data.chatId), {
+                  messages: arrayUnion({
+                    id: nanoid(),
+                    text,
+                    senderId: currentUser.id,
+                    data: Timestamp.now(),
+                    img: downloadURL
+                  })
+                })
+              });
+      } else {
+        await updateDoc(doc(db, "chats", data.chatId), {
+          messages: arrayUnion({
+            id: nanoid(),
+            text,
+            senderId: currentUser.id,
+            data: Timestamp.now()
+          })
+        });
+      }
+  
+      await updateDoc(doc(db, "userChats", currentUser.id), {
+        [data.chatId + ".lastMessage"]: {
+          text
+        },
+        [data.chatId + ".date"]: serverTimestamp() 
+      })
+  
+      await updateDoc(doc(db, "userChats", data.user.uid), {
+        [data.chatId + ".lastMessage"]: {
+          text
+        },
+        [data.chatId + ".date"]: serverTimestamp() 
+      })
+    }
 
-    return {searchUser, createUserChats, createChat}
+
+    return {searchUser, createUserChats, createChat, sendMessage}
 }
 
 export default useChat;

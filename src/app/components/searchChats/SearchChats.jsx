@@ -11,7 +11,6 @@ const SearchChats = ({users, handleSelect}) => {
         <img src={user.photoURL.downloadURL} alt="avatar" />
         <div className="userChatInfo">
           <span>{user.displayName}</span>
-          <p className="lastMessage">Hello</p>
         </div>
       </div>
     )))

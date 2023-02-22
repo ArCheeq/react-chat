@@ -12,6 +12,8 @@ const Messages = () => {
   const [messages, setMessages] = useState([]);
   const chatId = useSelector(state => state.userChat.chatId);
 
+  console.log(messages);
+
   useEffect(() => {
     const getMessages = () => {
       const unSub = onSnapshot(doc(db, "chats", chatId), (doc) => {
